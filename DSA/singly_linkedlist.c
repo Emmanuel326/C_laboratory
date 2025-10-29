@@ -15,7 +15,7 @@
 
 struct PacketDescriptor
 {
-	unit32_t id;
+	unint32_t id;
 	char source_ip[16];
 	char dest_ip[16];
 	unit16_t size;
