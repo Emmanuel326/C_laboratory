@@ -93,3 +93,27 @@ You might:
 
 
 
+---
+
+## 🔍 Summary
+
+| Method | What is Passed | Affects Original? | Memory Use | Typical Use Case |
+|--------|----------------|------------------|-------------|------------------|
+| **By Value** | A copy of the struct | ❌ No | 🔺 Higher | Displaying or reading data |
+| **By Reference** | Address of the struct | ✅ Yes | ✅ Lower | Updating or modifying data |
+
+---
+
+## 🧾 Key Notes
+
+- The `.` operator accesses struct members directly.  
+- The `->` operator accesses members through a pointer.  
+- Passing structs by reference is preferred for **performance-critical or memory-intensive programs**.  
+- Passing by value is preferred when **data integrity** is more important than speed.
+
+---
+
+✍️ **Author:** Dex & Max  
+📅 **Topic:** Intermediate C Concepts  
+🧾 **Lesson:** Structs as Function Parameters — Value vs Reference
+
