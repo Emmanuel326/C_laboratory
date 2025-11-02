@@ -13,7 +13,7 @@ struct Node
 	struct Node *next;
 }
 //data stores the payload
-//prev stores the previous node
+////prev stores the previous node
 //nxt is the pointer to the next pointer
 //
 //
@@ -33,6 +33,38 @@ Node *createNode(int data)
 	newNode->next=NULL;
 
 	return newNode;
+}
+
+//(B) INSERT AT THE FRONT
+
+void insertFront(Node **head, int data)
+{
+	Node *newNode=createNode(data);
+	newNode->next=*head;
+	if(!*head)
+		(*head)->prev =newNode;
+	*hea=newNode;
+}
+
+//visual
+//insert 5 at front of 10<->20<->30
+//before:NULL<-[10]<->[20]<->[30]
+//AFTER:NULL<-[5]<->[10]<->[20]<->[30]
+
+//(C)insert at the end
+void insertEnd(Node**head, int data)
+{
+	Node *newNode=createNode(data);
+	if(*head==NULL)
+	{
+		*head=newNode;
+		return;
+	}
+	Node *temp=*head;
+	while(temp->next !=NULL)
+		temp=tenp->next;
+	temp->next=newNode;
+	newNode->prev=temp;
 }
 
 
