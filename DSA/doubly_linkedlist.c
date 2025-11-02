@@ -67,4 +67,20 @@ void insertEnd(Node**head, int data)
 	newNode->prev=temp;
 }
 
+//(delete a NOde)
+//to delete a node del, you adjust its neighbour's pointers
+void deleteNode(Node** head, Node *del)
+{
+	if(*head==NULL|| del==NULL)
+		return;
+	if(*head==del)
+		*head=del->next;
+	if(del->next !=NULL)
+		del->next->prev = del->;
 
+	if(del->prev !=NULL)
+		del->prev->=del->next;
+
+	free(del);
+
+}
