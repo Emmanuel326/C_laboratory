@@ -116,3 +116,61 @@ void print_in_order(TreeNode *root)
 
 	
 }
+
+
+//helper function
+
+TreeNode *find_min(TreeNode *node)
+{
+	while(node->left_child != NULL)
+	{
+		node=node->left_child;
+
+	}
+	return node;
+}
+//BST DELETE FUNCTION
+TreeNode* delete_value(TreeNode *root, int target)
+{
+	if(root==NULL)
+		return NULL;
+
+	//step 1.searchforthenode...
+	if(target<root->value)
+	{
+		root->left_child=delte_value(root->left_child, target);
+
+	}
+	else if(target > root->value)
+	{
+		root->right_child=delete_value(root->right_child,target);
+
+			
+	}
+	else
+	{
+		//...found the node...//
+		//case 1: no child(leaf)
+		if(root->left_cild==NULL && root->right_child==NULL)
+		{
+			free(root);
+		return NULL;
+
+	}
+
+	//case 2. one child only//
+	if(root->left_child==NULL)
+	{
+		TreeNode* temp=root->left_child;
+		free(root);
+		return temp;
+	}
+
+	//case 3: 2 children
+	TreeNode *successor=find_min(root->right_child);
+	root->value = successor->value;
+	root->right_child=delete_value(root->right_child,successor->value);
+
+	}
+	return root;
+}
