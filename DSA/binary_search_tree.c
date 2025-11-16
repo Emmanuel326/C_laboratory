@@ -70,4 +70,49 @@ TreeNode * insert_value(TreeNode *root, int value)
 }
 
 
+//STEP 3. SEARCH A VALUE
+//you look for a value by comparing
+//if equal-found
+//if smaller-search left
+//if bigger -> search right
+//if you hit NULL-> does not exist
+//
 
+
+//search or a value down the tree
+TreeNode *search_value(TreeNode *root, int target)
+{
+	if(root==NULL)
+	{
+		return NULL;
+	}
+	if(target==root->value)
+	{
+		return root; //found the box
+	}
+	if(target <root->value)
+	{
+		return search_value(root->left_child);
+
+	}
+	else
+	{
+		return search_value(root->right_child);
+	}
+}
+
+//STEP 4. PRINT TREE(SORTED)
+//inoder traversal prints values from smallest-largest
+
+void print_in_order(TreeNode *root)
+{
+	if(root==NULL)
+		return;
+	
+		
+		print_in_order(root->left_child);
+		printf("%d", root->value);
+		print_in_order(root -> right_child);
+
+	
+}
