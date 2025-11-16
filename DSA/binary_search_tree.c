@@ -1,0 +1,73 @@
+ //The structure--"A Node is a box that holds data"
+#include <stdio.h>
+#include <stdlib.h>
+
+//a node represents one element of the tree.
+typedef struct TreeNode 
+{
+	int value;  //the actual data we store
+	struct TreeNode *left_child;  //pointer to smaller values
+	struct TreeNode *right_child;  //pointer to larger values
+}TreeNode;
+
+//create a new node-"Build a box"
+TreeNode * create_node(int value)
+{
+	TreeNode *new_node = (TreeNode*)malloc(sizeof(TreeNode)); 
+	if(new_node==NULL)
+	{
+		perror("Malloc failed\n");
+		exit(EXIT_FAILURE);
+	}
+
+	new_node ->value =value;
+
+	new_node ->left_child=NULL;
+
+
+	new_node->right_child=NULL;
+
+	return new_node;
+
+
+
+}//wherever we need something we first create a box for it.
+ //
+ // 
+ //idea before code
+ //smaller values goes to left
+ //larger values to right
+ //if we need to place a value we go down he teee, compare. Go left until we find an empty spot insert a new box(node) tree
+ //
+ //ADD VALUES()-ADD VALUES TO THE TREE
+ 
+//place a value into the tree at the correct spoyt
+TreeNode * insert_value(TreeNode *root, int value)
+{
+	//if tree is empty create first node
+	if(root==NULL)
+	{
+		return create_node(value);
+	}
+	//if smaller go left
+	if(value < root -> value)
+	{
+		root->left_child=insert_value(root->left_child,value);
+	}
+	//if larger go right
+	if(value > root->value)
+	{
+		root->right_child=insert_value(root->right_child, value);
+	}
+	//if equal do nothing. ignore duplicates
+	else
+	{
+		//adda debug print 
+		printf("Vale $d already exists\n", value);
+	}
+	return root;
+	
+}
+
+
+
