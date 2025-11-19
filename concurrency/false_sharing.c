@@ -4,18 +4,24 @@
 #include <stdint.h>
 #include <time.h>
 
-#define ITERATIONS 100000000
+//added
+//#include <atdalign.h>
 
- typedef struct shared_data
+
+#define ITERATIONS 10000000000
+
+  struct shared_data
 {
 	long x;
 	long y; //thread 2 touches this
 
 };
 
- static struct share_data data;
+typedef struct shared_data shared_data; 
 
-void* thread1(void*arg)
+static shared_data data;
+
+void* thread1(void* arg)
 {
 	for(long i=0; i<ITERATIONS; i++)
 	{
