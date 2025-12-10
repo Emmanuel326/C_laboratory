@@ -5,21 +5,21 @@
 #include <time.h>
 
 //added
-//#include <atdalign.h>
+#include <stdalign.h>
 
 
 #define ITERATIONS 10000000000
 
-  struct shared_data
+  struct aligned_data
 {
-	long x;
-	long y; //thread 2 touches this
+	alignas(64) long x;
+	alignas(64) long y; //thread 2 touches this
 
 };
 
-typedef struct shared_data shared_data; 
+typedef struct aligned_data aligned_data; 
 
-static shared_data data;
+static aligned_data data;
 
 void* thread1(void* arg)
 {
