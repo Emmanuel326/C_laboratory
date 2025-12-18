@@ -23,8 +23,13 @@ void bq_destroy(bounded_queue_t *q);
 
 /*
  * Enqueue an item into the queue.
- *
+ * Undefined behavior if called while other threads
+ * are blocked in enqueue or dequeue.
+
  * Blocks if the queue is full.
+ * The caller must ensure all producer and consumer threads
+ * have terminated or stopped using the queue before destruction.
+
  *
  * Returns:
  *  0 on success
@@ -52,6 +57,9 @@ size_t bq_size(bounded_queue_t *q);
 
 /*
  * Return the fixed capacity of the queue.
+ * The returned value may be immediately outdated if called concurrently.
  */
 size_t bq_capacity(bounded_queue_t *q);
+
+//int bq_close(bounded_queue *q);
 

@@ -25,7 +25,7 @@ int bq_init(bounded_queue_t *q , size_t capacity)
         }
         q->buffer=calloc(capacity, sizeof(void *));
         if(!q->buffer)
-        {return -1}
+        {return -1;}
 
         q->capacity=capacity;
         q->size=0;
@@ -57,7 +57,7 @@ void bq_destroy(bounded_queue_t *q)
                 return;
 
         pthread_cond_destroy(&q->not_empty);
-        pthread_cond_destroy(&q->full);
+        pthread_cond_destroy(&q->not_full);
         pthread_mutex_destroy(&q->lock);
 
         free(q->buffer);
