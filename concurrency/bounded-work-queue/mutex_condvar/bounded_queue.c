@@ -4,6 +4,17 @@
 #include <assert.h>
 
 #include "bounded_queue.h"
+#include "ring_buffer.h"
+
+struct bounded_queue {
+    struct ring_buffer rb;
+    pthread_mutex_t lock;
+    pthread_cond_t not_full;
+    pthread_cond_t not_empty;
+};
+
+
+
 
 
 int bq_init(bounded_queue_t *q , size_t capacity)
