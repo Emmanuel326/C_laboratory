@@ -2,7 +2,18 @@
 
 #include <stddef.h>
 
-typedef struct bounded_queue bounded_queue_t;
+typedef struct bounded_queue 
+{
+        void **buffer;
+        size_t capacity;
+        size_t size;
+        size_t head;
+        size_t tail;
+
+        pthread_mutex_t lock;
+        pthread_cond_t not_full;
+        pthread_cond_t not_empty;
+}bounded_queue_t;
 
 /*
  * Initialize a bounded queue with fixed capacity.

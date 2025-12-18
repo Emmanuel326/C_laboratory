@@ -5,18 +5,6 @@
 
 #include "bounded_queue.h"
 
-struct bounded_queue
-{
-        void **buffer;
-        size_t capacity;
-        size_t size;
-        size_t head;
-        size_t tail;
-
-        pthread_mutex_t lock;
-        pthread_cond_t not_full;
-        pthread_cond_t not_empty;
-};
 
 int bq_init(bounded_queue_t *q , size_t capacity)
 {
@@ -69,7 +57,7 @@ int bq_enqueue(bounded_queue_t *q, void *item)
 {
         if(!q)
                 return -1;
-        pthread_mutex_lock(&q->lockk);
+        pthread_mutex_lock(&q->lock);
 
         //block while queue is full
         while(q->size==q->capacity)
