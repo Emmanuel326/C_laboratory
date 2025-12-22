@@ -1,5 +1,5 @@
 struct ring_buffer {
-    void   **buf;
+    void   **buffer;
     size_t   capacity;
     size_t   size;
     size_t   head;

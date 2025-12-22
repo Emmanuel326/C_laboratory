@@ -66,3 +66,5 @@ size_t bq_capacity(bounded_queue_t *q);
 
 //int bq_close(bounded_queue *q);
 
+bounded_queue_t* bq_create(size_t capacity);
+

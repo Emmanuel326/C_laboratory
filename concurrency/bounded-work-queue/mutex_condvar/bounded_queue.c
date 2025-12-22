@@ -4,7 +4,8 @@
 #include <assert.h>
 
 #include "bounded_queue.h"
-#include "ring_buffer.h"
+#include "../common/ring_buffer.h"
+
 
 struct bounded_queue {
     struct ring_buffer rb;
@@ -17,20 +18,22 @@ struct bounded_queue {
 
 
 
+
 int bq_init(bounded_queue_t *q , size_t capacity)
 {
         if(!q || capacity==0)
         {
                 return -1;
         }
-        q->buffer=calloc(capacity, sizeof(void *));
-        if(!q->buffer)
+
+        q->rb.buffer=calloc(capacity, sizeof(void *));
+        if(!q->rb.buffer)
         {return -1;}
 
-        q->capacity=capacity;
-        q->size=0;
-        q->head=0;
-        q->tail=0;
+        q->rb.capacity=capacity;
+        q->rb.size=0;
+        q->rb.head=0;
+        q->rb.tail=0;
         
 
         if(pthread_mutex_init(&q->lock,NULL) !=0)
@@ -47,7 +50,7 @@ err_not_empty:
 err_not_full:
     pthread_mutex_destroy(&q->lock);
 err_mutex:
-    free(q->buffer);
+    free(q->rb.buffer);
     return -1;
 
 }
@@ -61,7 +64,7 @@ void bq_destroy(bounded_queue_t *q)
         pthread_cond_destroy(&q->not_full);
         pthread_mutex_destroy(&q->lock);
 
-        free(q->buffer);
+        free(q->rb.buffer);
 }
 
 int bq_enqueue(bounded_queue_t *q, void *item)
@@ -71,19 +74,19 @@ int bq_enqueue(bounded_queue_t *q, void *item)
         pthread_mutex_lock(&q->lock);
 
         //block while queue is full
-        while(q->size==q->capacity)
+        while(q->rb.size==q->rb.capacity)
         {
                 pthread_cond_wait(&q->not_full, &q->lock);
         }
 
         //invariants that must hold inside the critical section
-        assert(q->size<q->capacity);
-        assert(q->tail<q->capacity);
+        assert(q->rb.size<q->rb.capacity);
+        assert(q->rb.tail<q->rb.capacity);
 
         //enque a single item
-        q->buffer[q->tail]=item;
-        q->tail=(q->tail + 1)%q->capacity;
-        q->size++;
+        q->rb.buffer[q->rb.tail]=item;
+        q->rb.tail=(q->rb.tail + 1)%q->rb.capacity;
+        q->rb.size++;
 
         //queue is no longer empty; wake one consumer
         pthread_cond_signal(&q->not_empty);
@@ -101,19 +104,19 @@ int bq_dequeue(bounded_queue_t *q, void **item)
         pthread_mutex_lock(&q->lock);
 
         //block while queue is empty
-        while(q->size==0)
+        while(q->rb.size==0)
         {
                 pthread_cond_wait(&q->not_empty,&q->lock);
         }
 
         //invariants that must hold inside the critical section
-        assert(q->size>0);
-        assert(q->head<q->capacity);
+        assert(q->rb.size>0);
+        assert(q->rb.head<q->rb.capacity);
         
         //dequeu the item
-        *item=q->buffer[q->head];
-        q->head=(q->head+1)%q->capacity;
-        q->size--;
+        *item=q->rb.buffer[q->rb.head];
+        q->rb.head=(q->rb.head+1)%q->rb.capacity;
+        q->rb.size--;
 
         //queue is no longer full; wake one producer
         pthread_cond_signal(&q->not_full);
@@ -127,7 +130,7 @@ size_t bq_capacity(bounded_queue_t *q)
 {
         if(!q)
                 return 0;
-        return q->capacity;
+        return q->rb.capacity;
 
 }
 
@@ -136,9 +139,23 @@ size_t bq_size(bounded_queue_t *q)
         if(!q)
                 return 0;
         pthread_mutex_lock(&q->lock);
-        size_t size=q->size;
+
+        size_t size=q->rb.size;
         pthread_mutex_unlock(&q->lock);
 
         return size;
+}
+
+bounded_queue_t* bq_create(size_t capacity)
+{
+        bounded_queue_t *q=malloc(sizeof(struct bounded_queue));
+        if(!q) return NULL;
+
+        if(bq_init(q, capacity) != 0 )
+        {
+                free(q);
+                return NULL;
+        }
+        return q;
 }
 
