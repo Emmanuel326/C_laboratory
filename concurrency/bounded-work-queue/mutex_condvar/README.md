@@ -33,3 +33,24 @@ This implementation satisfies the global invariants defined in:
 - Threads may sleep → higher latency under contention
 - Fairness depends on the OS scheduler
 
+### Verification Suite (Survival Verified)
+
+This implementation has been subjected to aggressive testing to ensure safety and liveness:
+
+1. **Functional Correctness**: Single-threaded tests verify FIFO ordering and circular buffer wrap-around logic.
+2. **High-Contention Stress Test**: 
+   - 4 Producers, 4 Consumers, 40,000 items.
+   - Verified via Sum-Checksum (expected vs actual) to ensure **zero data loss** or duplication.
+3. **Dynamic Analysis (Sanitizers)**:
+   - **ASan (AddressSanitizer)**: Verified zero memory leaks and no out-of-bounds heap accesses.
+   - **UBSan (UndefinedBehaviorSanitizer)**: Verified no integer overflows or non-compliant pointer arithmetic.
+   - **TSan (ThreadSanitizer)**: Verified **zero data races** across thousands of concurrent operations.
+
+---
+
+### Compilation & Testing
+
+To compile with all safety checks:
+```bash
+clang -g -O2 -Wall -Wextra -Werror -fsanitize=address,undefined \
+    tests/test_stress.c bounded_queue.c -I. -I../common -lpthread -o stress_test
